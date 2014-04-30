@@ -3,6 +3,11 @@ from lxml import html
 import cPickle as pickle
 from collections import OrderedDict
 import time
+import pandas as pd
+import numpy
+import sklearn
+import scipy
+import matplotlib
 
 class Torrent(object):
 	id = 0
@@ -18,7 +23,7 @@ class Torrent(object):
 	comments = []
 
 	def printTorrent(self):
-		print self.id, self.title, self.upvotes, self.downvotes
+		print self.id, self.title.encode('utf-8'), self.upvotes, self.downvotes
 
 all_torrents = {}
 discarded_torrents = 0
@@ -83,16 +88,14 @@ def parseXML(root):
 #	del xml
 #	del all_torrents
 #	print "Objects deleted in", (time.time()-start), "seconds."
-#
 
 if __name__ == "__main__":
 	start = time.time()
 	all_torrents = pickle.load(open('torrents.p', 'rb'))
 	print "Torrents reloaded in", (time.time()-start), "seconds."
 
-	all_torrents = OrderedDict(sorted(all_torrents.iteritems(), key = lambda torrent: (torrent[1].upvotes + torrent[1].downvotes), reverse = True))
+	all_torrents = OrderedDict(sorted(all_torrents.iteritems(), key = lambda torrent: (torrent[1].upvotes + torrent[1].downvotes), reverse = False))
 	for t_id in all_torrents:
 		all_torrents[t_id].printTorrent()
 	print len(all_torrents), "torrents found."
 	print "Torrents printed in", (time.time()-start), "seconds."
-
